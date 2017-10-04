@@ -18,8 +18,8 @@ cache:
 
 before_install:
   - yes | sdkmanager "system-images;android-25;google_apis;armeabi-v7a" &>/dev/null
-  - echo no | android create avd --force -n test -k "system-images;android-25;google_apis;armeabi-v7a"
-#  - echo no | $ANDROID_HOME/tools/bin/avdmanager create avd --force -n test -k "system-images;android-25;google_apis;armeabi-v7a"
+#  - echo no | android create avd --force -n test -k "system-images;android-25;google_apis;armeabi-v7a"
+  - echo no | avdmanager create avd --force -n test -k "system-images;android-25;google_apis;armeabi-v7a"
   - $ANDROID_HOME/emulator/emulator -avd test -no-audio -no-window & &>/dev/null
 
 install:
