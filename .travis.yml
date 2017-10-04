@@ -18,7 +18,7 @@ before_install:
   - echo yes | sdkmanager "system-images;android-25;google_apis;armeabi-v7a" &>/dev/null
   - echo yes | sdkmanager --licenses &>/dev/null
   - echo no | avdmanager create avd --force -n test -k "system-images;android-25;google_apis;armeabi-v7a" &>/dev/null
-  - $ANDROID_HOME/emulator/emulator -avd test -no-audio -no-window & &>/dev/null
+  - $ANDROID_HOME/emulator/emulator -avd test -no-audio -no-window &
 
 install:
   # Build debug and release(run proguard)
