@@ -6,7 +6,6 @@ android:
     - tools
     - build-tools-25.0.2
     - android-26
-    - sys-img-armeabi-v7a-android-26
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
   - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
@@ -18,8 +17,7 @@ cache:
 
 before_install:
   - yes | sdkmanager "system-images;android-25;google_apis;armeabi-v7a"
-  - ls $ANDROID_HOME/tools/bin
-  - ls $ANDROID_HOME/tools
+  - echo no | android create avd --force -n test -k "system-images;android-25;google_apis;armeabi-v7a"
 #  - echo no | $ANDROID_HOME/tools/bin/avdmanager create avd --force -n test -k "system-images;android-25;google_apis;armeabi-v7a"
   - $ANDROID_HOME/emulator/emulator -avd test -no-audio -no-window & &>/dev/null
 
