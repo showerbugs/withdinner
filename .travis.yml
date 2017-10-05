@@ -29,14 +29,14 @@ before_script:
   - android-wait-for-emulator
 
   # Turn off animations
-  - adb shell settings put global window_animation_scale 0 &
-  - adb shell settings put global transition_animation_scale 0 &
-  - adb shell settings put global animator_duration_scale 0 &
+#  - adb shell settings put global window_animation_scale 0 &
+#  - adb shell settings put global transition_animation_scale 0 &
+#  - adb shell settings put global animator_duration_scale 0 &
 
   # For Multidex issue for devices API < 19
-  - adb shell setprop dalvik.vm.dexopt-flags v=n,o=v
-  - adb shell stop installd
-  - adb shell start installd
+#  - adb shell setprop dalvik.vm.dexopt-flags v=n,o=v
+#  - adb shell stop installd
+#  - adb shell start installd
 
   # Wake up
   - adb shell input keyevent 82 &
