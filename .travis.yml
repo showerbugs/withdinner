@@ -24,6 +24,7 @@ env:
     - ADB_INSTALL_TIMEOUT=8
 
 before_script:
+  - android list target
   - echo no | android create avd --force -n test -t android-21 --abi armeabi-v7a
 #  - emulator -avd test -no-skin -no-audio -no-window & &>/dev/null
   - emulator -avd test -no-skin -no-audio -no-window &
@@ -36,7 +37,6 @@ install:
 
 script:
   # Run all checks
-  android list target
   - ./gradlew testDebug connectedDebugAndroidTest -Pci --stacktrace
 
 branches:
