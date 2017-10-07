@@ -1,5 +1,7 @@
 # withdinner
 
+![https://travis-ci.org/showerbugs/withdinner.svg?branch=master](https://travis-ci.org/showerbugs/withdinner.svg?branch=master)
+
 S모 회사 임직원들이 자신의 입출문 시간을 계산하는데 도움을 주기 위해 개발하는 Application입니다.
 
 # To-do list
