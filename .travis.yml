@@ -8,13 +8,14 @@ android:
     - tools
     - platform-tools
     - build-tools-25.0.2
-    - android-21
+    - build-tools-26.0.2
     - android-26
     - extra-android-m2repository
     - extra-google-m2repository
     - extra-android-support
     - extra-google-google_play_services
     - sys-img-armeabi-v7a-android-25
+    - sys-img-armeabi-v7a-addon-google_apis-google
   licenses:
     - 'android-sdk-preview-license-.+'
     - 'android-sdk-license-.+'
@@ -25,6 +26,7 @@ env:
 
 before_script:
   - android list target
+  - ls $ANDROID_HOME/tools/bin
   - echo no | android create avd --force -n test -t android-25 --abi armeabi-v7a
 #  - emulator -avd test -no-skin -no-audio -no-window & &>/dev/null
   - emulator -avd test -no-skin -no-audio -no-window &
