@@ -1,60 +1,50 @@
 language: android
-
-jdk:
-  - oraclejdk8
-
-android:
-  components:
-    - tools
-    - platform-tools
-    - build-tools-25.0.2
-    - build-tools-26.0.2
-    - android-26
-    - extra-android-m2repository
-    - extra-google-m2repository
-    - extra-android-support
-    - extra-google-google_play_services
-    - sys-img-armeabi-v7a-android-25
-    - sys-img-armeabi-v7a-addon-google_apis-google-25
-  licenses:
-    - 'android-sdk-preview-license-.+'
-    - 'android-sdk-license-.+'
-    - 'google-gdk-license-.+'
-env:
-  global:
-    - ADB_INSTALL_TIMEOUT=8
-
-before_script:
-  - android list target
-  - ls $ANDROID_HOME/tools/bin
-  - sdkmanager --update
-
-  - echo no | android create avd --force -n test -t android-25 --abi armeabi-v7a
-#  - emulator -avd test -no-skin -no-audio -no-window & &>/dev/null
-  - emulator -avd test -no-skin -no-audio -no-window &
-  - android-wait-for-emulator
-  - adb shell input keyevent 82 &
-
-install:
-  # Build debug and release(run proguard)
-  - ./gradlew clean assemble assembleDebugAndroidTest -Pci --stacktrace
-
-script:
-  # Run all checks
-  - ./gradlew testDebug connectedDebugAndroidTest -Pci --stacktrace
-
-branches:
-  except:
-    - gh-pages
-
-sudo: false
+jdk: oraclejdk8
 
 before_cache:
+  # Do not cache a few Gradle files/directories (see https://docs.travis-ci.com/user/languages/java/#Caching)
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
   - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
 
 cache:
   directories:
+    # Android SDK
+    - $HOME/android-sdk-dl
+    - $HOME/android-sdk
+
+    # Gradle dependencies
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
+
+    # Android build cache (see http://tools.android.com/tech-docs/build-cache)
     - $HOME/.android/build-cache
+
+install:
+  # Download and unzip the Android SDK tools (if not already there thanks to the cache mechanism)
+  # Latest version available here: https://developer.android.com/studio/index.html#downloads
+  - if test ! -e $HOME/android-sdk-dl/sdk-tools.zip ; then curl https://dl.google.com/android/repository/sdk-tools-linux-3859397.zip > $HOME/android-sdk-dl/sdk-tools.zip ; fi
+  - unzip -qq -n $HOME/android-sdk-dl/sdk-tools.zip -d $HOME/android-sdk
+
+  # Install or update Android SDK components (will not do anything if already up to date thanks to the cache mechanism)
+  - echo y | $HOME/android-sdk/tools/bin/sdkmanager 'tools' > /dev/null
+  - echo y | $HOME/android-sdk/tools/bin/sdkmanager 'platform-tools' > /dev/null
+  - echo y | $HOME/android-sdk/tools/bin/sdkmanager 'build-tools;25.0.2' > /dev/null
+  - echo y | $HOME/android-sdk/tools/bin/sdkmanager 'platforms;android-25' > /dev/null
+  - echo y | $HOME/android-sdk/tools/bin/sdkmanager 'platforms;android-26' > /dev/null
+  - echo y | $HOME/android-sdk/tools/bin/sdkmanager 'extras;google;m2repository' > /dev/null
+  - echo y | $HOME/android-sdk/tools/bin/sdkmanager 'extras;android;m2repository' > /dev/null
+  - echo y | $HOME/android-sdk/tools/bin/sdkmanager 'extras;google;google_play_services' > /dev/null
+  - echo y | $HOME/android-sdk/tools/bin/sdkmanager 'system-images;android-25;google_apis;armeabi-v7a' > /dev/null
+
+env:
+  - ANDROID_HOME=$HOME/android-sdk
+
+before_script:
+  - android list target
+  - echo no | $ANDORID_HOME/tools/bin/avdmanager create avd -n test -k "system-images;android-25;google_apis;armeabi-v7a" --force
+  - cd $ANDROID_HOME/tools && ./emulator -avd test -no-skin -no-audio -no-window &
+  - android-wait-for-emulator
+  - adb shell input keyevent 82 &
+
+script:
+  - ./gradlew testDebug connectedDebugAndroidTest -Pci --stacktrace
