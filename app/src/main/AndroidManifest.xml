@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".WorkHistoryListActivity"
+            android:name=".timetableListActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -20,13 +20,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".WorkHistoryDetailActivity"
-            android:label="@string/title_workhistory_detail"
-            android:parentActivityName=".WorkHistoryListActivity"
+            android:name=".timetableDetailActivity"
+            android:label="@string/title_timetable_detail"
+            android:parentActivityName=".timetableListActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="showerbugs.withdinner.WorkHistoryListActivity" />
+                android:value="showerbugs.withdinner.timetableListActivity" />
         </activity>
     </application>
 

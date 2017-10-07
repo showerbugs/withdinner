@@ -20,14 +20,14 @@ import showerbugs.withdinner.dummy.DummyContent;
 import java.util.List;
 
 /**
- * An activity representing a list of workhistory. This activity
+ * An activity representing a list of TimeTables. This activity
  * has different presentations for handset and tablet-size devices. On
  * handsets, the activity presents a list of items, which when touched,
- * lead to a {@link WorkHistoryDetailActivity} representing
+ * lead to a {@link timetableDetailActivity} representing
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
  */
-public class WorkHistoryListActivity extends AppCompatActivity {
+public class timetableListActivity extends AppCompatActivity {
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -38,7 +38,7 @@ public class WorkHistoryListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_workhistory_list);
+        setContentView(R.layout.activity_timetable_list);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -53,11 +53,11 @@ public class WorkHistoryListActivity extends AppCompatActivity {
             }
         });
 
-        View recyclerView = findViewById(R.id.workhistory_list);
+        View recyclerView = findViewById(R.id.timetable_list);
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
 
-        if (findViewById(R.id.workhistory_detail_container) != null) {
+        if (findViewById(R.id.timetable_detail_container) != null) {
             // The detail container view will be present only in the
             // large-screen layouts (res/values-w900dp).
             // If this view is present, then the
@@ -82,7 +82,7 @@ public class WorkHistoryListActivity extends AppCompatActivity {
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.workhistory_list_content, parent, false);
+                    .inflate(R.layout.timetable_list_content, parent, false);
             return new ViewHolder(view);
         }
 
@@ -97,16 +97,16 @@ public class WorkHistoryListActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     if (mTwoPane) {
                         Bundle arguments = new Bundle();
-                        arguments.putString(WorkHistoryDetailFragment.ARG_ITEM_ID, holder.mItem.id);
-                        WorkHistoryDetailFragment fragment = new WorkHistoryDetailFragment();
+                        arguments.putString(timetableDetailFragment.ARG_ITEM_ID, holder.mItem.id);
+                        timetableDetailFragment fragment = new timetableDetailFragment();
                         fragment.setArguments(arguments);
                         getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.workhistory_detail_container, fragment)
+                                .replace(R.id.timetable_detail_container, fragment)
                                 .commit();
                     } else {
                         Context context = v.getContext();
-                        Intent intent = new Intent(context, WorkHistoryDetailActivity.class);
-                        intent.putExtra(WorkHistoryDetailFragment.ARG_ITEM_ID, holder.mItem.id);
+                        Intent intent = new Intent(context, timetableDetailActivity.class);
+                        intent.putExtra(timetableDetailFragment.ARG_ITEM_ID, holder.mItem.id);
 
                         context.startActivity(intent);
                     }
