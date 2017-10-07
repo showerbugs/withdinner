@@ -8,41 +8,46 @@ before_cache:
 
 cache:
   directories:
-    # Android SDK
-    - $HOME/android-sdk-dl
-    - $HOME/android-sdk
-
     # Gradle dependencies
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
-
     # Android build cache (see http://tools.android.com/tech-docs/build-cache)
     - $HOME/.android/build-cache
 
-install:
-  # Download and unzip the Android SDK tools (if not already there thanks to the cache mechanism)
-  # Latest version available here: https://developer.android.com/studio/index.html#downloads
-  - if test ! -e $HOME/android-sdk-dl/sdk-tools.zip ; then curl https://dl.google.com/android/repository/sdk-tools-linux-3859397.zip > $HOME/android-sdk-dl/sdk-tools.zip ; fi
-  - unzip -qq -n $HOME/android-sdk-dl/sdk-tools.zip -d $HOME/android-sdk
-
-  # Install or update Android SDK components (will not do anything if already up to date thanks to the cache mechanism)
-  - echo y | $HOME/android-sdk/tools/bin/sdkmanager 'tools' > /dev/null
-  - echo y | $HOME/android-sdk/tools/bin/sdkmanager 'platform-tools' > /dev/null
-  - echo y | $HOME/android-sdk/tools/bin/sdkmanager 'build-tools;25.0.2' > /dev/null
-  - echo y | $HOME/android-sdk/tools/bin/sdkmanager 'platforms;android-26' > /dev/null
-  - echo y | $HOME/android-sdk/tools/bin/sdkmanager 'extras;google;m2repository' > /dev/null
-  - echo y | $HOME/android-sdk/tools/bin/sdkmanager 'extras;android;m2repository' > /dev/null
-  - echo y | $HOME/android-sdk/tools/bin/sdkmanager 'extras;google;google_play_services' > /dev/null
-  - echo y | $HOME/android-sdk/tools/bin/sdkmanager 'platforms;android-21' > /dev/null
-  - echo y | $HOME/android-sdk/tools/bin/sdkmanager 'system-images;android-21;google_apis;armeabi-v7a' > /dev/null
-
 env:
-  - ADB_INSTALL_TIMEOUT=8
+  global:
+    - ANDROID_API_LEVEL=26
+    - EMULATOR_API_LEVEL=21
+    - ANDROID_BUILD_TOOLS_VERSION=25.0.2
+    - ANDROID_ABI=armeabi-v7a
+    - ANDROID_TAG=google_apis
+    - ADB_INSTALL_TIMEOUT=20 # minutes (2 minutes by default)
+
+
+android:
+  components:
+    - tools # to get the new `repository-11.xml`
+    - platform-tools
+    - tools # to install Android SDK tools 25.1.x
+    - build-tools-$ANDROID_BUILD_TOOLS_VERSION
+    - android-$ANDROID_API_LEVEL
+    - android-$EMULATOR_API_LEVEL
+    # For Google APIs
+    - addon-google_apis-google-$ANDROID_API_LEVEL
+    - addon-google_apis-google-$EMULATOR_API_LEVEL
+    # Google Play Services
+    - extra-google-google_play_services
+    # Support library
+    - extra-android-support
+    # Latest artifacts in local repository
+    - extra-google-m2repository
+    - extra-android-m2repository
+    # Specify at least one system image
+    - sys-img-armeabi-v7a-google_apis-$EMULATOR_API_LEVEL
 
 before_script:
-  - android list target
-  - echo no | $HOME/android-sdk/tools/bin/avdmanager create avd -n test -k "system-images;android-21;google_apis;armeabi-v7a" --force
-  - cd $HOME/android-sdk/tools && ./emulator -avd test -no-skin -no-audio -no-window &
+  - echo no | android create avd --force -n test -t "android-"$EMULATOR_API_LEVEL --abi $ANDROID_ABI --tag $ANDROID_TAG
+  - emulator -avd test -no-skin -no-audio -no-window &
   - android-wait-for-emulator
   - adb shell input keyevent 82 &
 
