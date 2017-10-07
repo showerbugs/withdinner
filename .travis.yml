@@ -38,7 +38,6 @@ install:
 
 env:
   - ANDROID_HOME=$HOME/android-sdk
-  - ADB_INSTALL_TIMEOUT=8
 
 before_script:
   - android list target
